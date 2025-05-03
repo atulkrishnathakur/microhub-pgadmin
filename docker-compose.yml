@@ -1,0 +1,25 @@
+services:
+  microhub-pgadmin: # Service for pgAdmin4
+    image: dpage/pgadmin4:9.1.0 # Uses pgAdmin4 version 9.1.0
+    container_name: microhubpgadmin4container # Custom name for the pgAdmin4 container
+    ports:
+      - "5050:80" # Maps port 5050 on the host to port 80 in the container
+    env_file: 
+      - .env # Load all environment variables from the .env file
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=$PGADMIN_DEFAULT_EMAIL # Admin email for logging into pgAdmin4
+      - PGADMIN_DEFAULT_PASSWORD=$PGADMIN_DEFAULT_PASSWORD # Admin password for logging into pgAdmin4
+    volumes:
+      - pgadmin4data:/var/lib/pgadmin # Persistent storage for database data
+    networks:
+      - microhub_network # Connects to your custom network
+    restart: always # Automatically restarts the container if it stops or after a host machine reboot
+
+volumes:
+  pgadmin4data: # Named volume for PostgreSQL data
+    driver: local # used to create valume in host machine
+    name: microhub_pgadmin4data # Explicitly set the volume name
+
+networks:
+  microhub_network: # this network defined in gateway service
+    external: true  # Ensures it uses the pre-created network.
